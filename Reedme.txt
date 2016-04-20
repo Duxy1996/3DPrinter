@@ -1,0 +1,10 @@
+#####################################################
+Code for 3D Printer done by my own.
+#####################################################
+
+There is not doc jet, but in the future will be.
+I got help from Alvaro Casado Coscolla.
+
+Esto es todo.
+
+Carlos Duran Roca. UPV . 20/4/2016
