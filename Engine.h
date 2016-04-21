@@ -1,22 +1,25 @@
 #include "stdio.h"
 #include "Servo.h"
+#include "Thread.h"
+#include "ThreadController.h"
 #define MAXSIZE 512
 
 class Engine {
   // Servos that are gonna be used only have two signlas (direction and enable), and VCC and GND
   // Engine position
   int pos;
-  // Engine pin enable
+  // Engine pin! enable
   int pin;
   // Engine limit switch in axis
   int final;
-  // axis direction
+  // axis direction pin!
   int directionpin;
+
+  Thread moveThread = Thread();
   
   // Servo one is always used
-  Servo one;
-  // Servo Two is used only in the vertical 
-  Servo two;
+  Servo one; 
+  
   public:
     Engine(Servo o,int p,int f, int dir){
       this->one = o;
@@ -27,7 +30,7 @@ class Engine {
       
    // go to Zero position.
   void toZero(){    
-    //final_X is pin which corresponds with a "final de carrera"
+    //final_X is pin which corresponds with a end switch
     pinMode(pin,OUTPUT);
     while(analogRead(final)>0) {
         //Enable Servo go to left,Under (if is it on LOW position go to the other side)
@@ -37,23 +40,32 @@ class Engine {
     digitalWrite(pin,LOW);
     pos = 0;    
     }
+    
   //move servo to Rigth
-  void moveServoStepRigth(int step){
+  int moveServoStepRigth(int step){
       for(int i = 0; i< step; i++){
         digitalWrite(directionpin,LOW);
-        digitalWrite(pin,HIGH);         
+        digitalWrite(pin,HIGH); 
+        this->pos = step - 1;          
       }
-      digitalWrite(pin,LOW);    
+      digitalWrite(pin,LOW);
+      return this->pos;
+        
   }
   //move Servo to left
-  void moveServoStepLeft(int step){
+  int moveServoStepLeft(int step){
       for(int i = 0; i< step; i++){
         digitalWrite(directionpin,HIGH);
-        digitalWrite(pin,HIGH);         
+        digitalWrite(pin,HIGH);
+        this->pos = step + 1;          
       }
       digitalWrite(pin,LOW);    
+      return this->pos;
   }
-  
+ 
+  void setPos(int step) {
+      this->pos = step;
+      }
   
   boolean isInSetUp(){
     return 0 == pos;

@@ -9,31 +9,59 @@
 #define sizeY 512
 #define sizeZ 512
 
-
-void calibrateAxisToZero(Engine &engenieX,Engine &engenieY,Engine &engenieZ){
-  engenieX.toZero();
-  engenieY.toZero();
-  engenieZ.toZero();  
-}
-
-
-void setup() {
-  //Vars
+//Vars
   Servo servoX;
   Servo servoY;
   Servo servoZ;
 
   int selected;
 
-  //Start display
+//Start display
   LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
   
-  //Start the code
+//Start the code
   Engine engenieX =  Engine(servoX,22,49,23);
   Engine engenieY =  Engine(servoY,24,51,25);
   Engine engenieZ =  Engine(servoZ,26,53,27);
+
+//Threads to move Servos
+  Thread moveThreadX = Thread();
+  Thread moveThreadY = Thread();
+  Thread moveThreadZ = Thread();
+
+
+
+  void calibrateAxisToZero(Engine &engenieX,Engine &engenieY,Engine &engenieZ){
+    engenieX.toZero();
+    engenieY.toZero();
+    engenieZ.toZero();  
+  }
+
+  //Move to left one by one until 512
+  void moveLeftX(){
+    engenieX.moveServoStepLeft(1);    
+  }
+  void moveLeftY(){
+    engenieX.moveServoStepLeft(1);    
+  }
+  void moveLeftZ(){
+    engenieX.moveServoStepLeft(1);    
+  }
+  //Move to Rigth one by one until 512
+  void moveRigthX(){
+    engenieX.moveServoStepLeft(1);    
+  }
+  void moveRigthY(){
+    engenieX.moveServoStepLeft(1);    
+  }
+  void moveRigthZ(){
+    engenieX.moveServoStepLeft(1);    
+  }
+
+
+void setup() {  
   
-  lcd.begin(16,1);
+  lcd.begin(16,2);
   lcd.print("Hello, Im a Printer");
   
   while(true){
@@ -58,22 +86,16 @@ void setup() {
                      break; //optional
           case 1  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
                      break; //optional  
-          
+          case 2  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
+                     break; //optional
+          case 3  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
+                     break; //optional
+          case 4  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
+                     break; //optional          
       }
-
-
-        
-
-              
-      
     }
-
-
-
-    
+   moveThreadX.onRun(moveLeftX); 
   }
-
-  
 }
 void loop() {
   // no need to repeat the melody.
