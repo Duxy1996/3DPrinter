@@ -1,8 +1,9 @@
-
+//Created by Carlos Durán Roca.
 
 #include "stdio.h"
 #include "Engine.h"
 #include "Servo.h"
+#include "interface.h"
 #include <LiquidCrystal.h>
 // CONSTANTS
 #define sizeX 512
@@ -16,15 +17,15 @@
 
   int selected;
 
-//Start display
+  //Start display 12->write enable others control the display.
   LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
   
-//Start the code
+  //Start the code
   Engine engenieX =  Engine(servoX,22,49,23);
   Engine engenieY =  Engine(servoY,24,51,25);
   Engine engenieZ =  Engine(servoZ,26,53,27);
 
-//Threads to move Servos
+  //Threads to move Servos
   Thread moveThreadX = Thread();
   Thread moveThreadY = Thread();
   Thread moveThreadZ = Thread();
@@ -47,6 +48,7 @@
   void moveLeftZ(){
     engenieX.moveServoStepLeft(1);    
   }
+  
   //Move to Rigth one by one until 512
   void moveRigthX(){
     engenieX.moveServoStepLeft(1);    
@@ -60,41 +62,49 @@
 
 
 void setup() {  
-  
   lcd.begin(16,2);
-  lcd.print("Hello, Im a Printer");
+  //Inizialice Interface
+  Interface LCDScreen;  
+  
+  LCDScreen.init(lcd);
+  LCDScreen.Options(lcd,0);
   
   while(true){
-    lcd.println("Options");
-    lcd.setCursor(0,0);
-    lcd.print("calibrate");
-    lcd.setCursor(0,1);
-    lcd.print("None");
+    
     while(true){ 
       int sensorValue = analogRead(A0);
       sensorValue = sensorValue * 5 * 1023;
-      if(sensorValue < 1){selected == 0;}
-      if(sensorValue < 2 && sensorValue > 1){selected == 1;}
-      if(sensorValue < 3 && sensorValue > 2){selected == 2;}
-      if(sensorValue < 4 && sensorValue > 3){selected == 3;}
-      if(sensorValue > 4){selected == 4;}      
+      //Calibrate Axis
+      if(sensorValue < 1){selected == 0;LCDScreen.Options(lcd,selected);}
+      //Calibrate Extrusor
+      if(sensorValue < 2 && sensorValue > 1){selected == 1;LCDScreen.Options(lcd,selected);}
+      //Load From sd
+      if(sensorValue < 3 && sensorValue > 2){selected == 2;LCDScreen.Options(lcd,selected);}
+      //More
+      if(sensorValue < 4 && sensorValue > 3){selected == 3;LCDScreen.Options(lcd,selected);}
+      //about
+      if(sensorValue > 4){selected == 4;LCDScreen.Options(lcd,selected);}      
       if(analogRead(A1) > 1){
           break;        
         }  
-      switch(sensorValue){
-          case 0  :  calibrateAxisToZero(engenieX,engenieY,engenieZ) ;
-                     break; //optional
-          case 1  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
-                     break; //optional  
-          case 2  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
-                     break; //optional
-          case 3  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
-                     break; //optional
-          case 4  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
-                     break; //optional          
+    switch(sensorValue){
+       case 0  :  calibrateAxisToZero(engenieX,engenieY,engenieZ) ;
+                  break; //optional
+       case 1  :  calibrateAxisToZero(engenieX,engenieY,engenieZ); 
+                  break; //optional  
+       case 2  :  for(int i = 0;i < 256;i++){
+                    moveThreadX.onRun(moveLeftX);
+                    moveThreadY.onRun(moveLeftY);
+                    moveThreadZ.onRun(moveLeftZ);   
+                  } 
+                  break; //optional
+       case 3  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
+                  break; //optional
+       case 4  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
+                  break; //optional          
       }
     }
-   moveThreadX.onRun(moveLeftX); 
+   
   }
 }
 void loop() {
