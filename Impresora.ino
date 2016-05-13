@@ -2,7 +2,7 @@
 
 #include "stdio.h"
 #include "Engine.h"
-#include "Servo.h"
+//#include "Servo.h"  // hasta 12 SSC32 polulu 4988 allegro
 #include "interface.h"
 #include <LiquidCrystal.h>
 // CONSTANTS
@@ -11,9 +11,6 @@
 #define sizeZ 512
 
 //Vars
-  Servo servoX;
-  Servo servoY;
-  Servo servoZ;
 
   int selected;
 
@@ -21,9 +18,9 @@
   LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
   
   //Start the code
-  Engine engenieX =  Engine(servoX,22,49,23);
-  Engine engenieY =  Engine(servoY,24,51,25);
-  Engine engenieZ =  Engine(servoZ,26,53,27);
+  Engine engenieX =  Engine(22,49,23);
+  Engine engenieY =  Engine(24,51,25);
+  Engine engenieZ =  Engine(26,53,27);
 
   //Threads to move Servos
   Thread moveThreadX = Thread();

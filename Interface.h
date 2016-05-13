@@ -44,24 +44,20 @@ class Interface {
   void calibrateAxis(LiquidCrystal lcd,int index){
     switch(index){
        case 0  :  lcd.setCursor(0,0);
-                  lcd.print(">CalibrateAxis");
+                  lcd.print(">Go to (0,0,0)");
                   lcd.setCursor(0,1);
-                  lcd.print(" CalibrateExtrusor");
+                  lcd.print(" Calibrate Board");
                   break; //optional
        case 1  :  lcd.setCursor(0,0);
-                  lcd.print(" CalibrateAxis");
+                  lcd.print(" Go to (0,0,0)");
                   lcd.setCursor(0,1);
-                  lcd.print(">CalibrateExtrusor");
+                  lcd.print(">Calibrate Board");
                   break; //optional  
        case 2  :  lcd.setCursor(0,0);
-                  lcd.print("CalibrateExtrusor");
+                  lcd.print(" Calibrate Board");
                   lcd.setCursor(0,1);
-                  lcd.print(">loadFromSD");
-                  break; //optional
-       case 3  :  
-                  break; //optional
-       case 4  :  
-                  break; //optional          
+                  lcd.print(">Go to half");
+                  break; //optional       
       } 
   }
   void calibrateExtrusor(LiquidCrystal lcd,int index){

@@ -1,5 +1,4 @@
 #include "stdio.h"
-#include "Servo.h"
 #include "Thread.h"
 #include "ThreadController.h"
 #define MAXSIZE 512
@@ -17,12 +16,10 @@ class Engine {
 
   Thread moveThread = Thread();
   
-  // Servo one is always used
-  Servo one; 
+  
   
   public:
-    Engine(Servo o,int p,int f, int dir){
-      this->one = o;
+    Engine(int p,int f, int dir){
       this->pin = p;
       this->final = f;
       this->directionpin = dir;
