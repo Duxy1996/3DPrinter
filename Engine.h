@@ -4,7 +4,7 @@
 #define MAXSIZE 512
 
 class Engine {
-  // Servos that are gonna be used only have two signlas (direction and enable), and VCC and GND
+  // stepBysteps that are gonna be used only have two signlas (direction and enable), and VCC and GND
   // Engine position
   int pos;
   // Engine pin! enable
@@ -30,7 +30,7 @@ class Engine {
     //final_X is pin which corresponds with a end switch
     pinMode(pin,OUTPUT);
     while(analogRead(final)>0) {
-        //Enable Servo go to left,Under (if is it on LOW position go to the other side)
+        //Enable stepBystep go to left,Under (if is it on LOW position go to the other side)
         digitalWrite(directionpin,HIGH);
         digitalWrite(pin,HIGH);  
     }
@@ -38,8 +38,8 @@ class Engine {
     pos = 0;    
     }
     
-  //move servo to Rigth
-  int moveServoStepRigth(int step){
+  //move stepBystep to Rigth
+  int movestepBystepStepRigth(int step){
       for(int i = 0; i< step; i++){
         digitalWrite(directionpin,LOW);
         digitalWrite(pin,HIGH); 
@@ -49,8 +49,8 @@ class Engine {
       return this->pos;
         
   }
-  //move Servo to left
-  int moveServoStepLeft(int step){
+  //move stepBystep to left
+  int movestepBystepStepLeft(int step){
       for(int i = 0; i< step; i++){
         digitalWrite(directionpin,HIGH);
         digitalWrite(pin,HIGH);

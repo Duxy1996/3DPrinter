@@ -2,7 +2,7 @@
 
 #include "stdio.h"
 #include "Engine.h"
-//#include "Servo.h"  // hasta 12 SSC32 polulu 4988 allegro
+//#include "stepBystep.h"  // hasta 12 SSC32 polulu 4988 allegro
 #include "interface.h"
 #include <LiquidCrystal.h>
 // CONSTANTS
@@ -18,11 +18,11 @@
   LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
   
   //Start the code
-  Engine engenieX =  Engine(22,49,23);
-  Engine engenieY =  Engine(24,51,25);
-  Engine engenieZ =  Engine(26,53,27);
+  Engine engenieX =  Engine(22,49,23); // Inizialice StepByStep Engine (Engine pin enable(one step),limit swich pin,Engine pin rotation direction)
+  Engine engenieY =  Engine(24,51,25); // Inizialice StepByStep Engine (Engine pin enable(one step),limit swich pin,Engine pin rotation direction)
+  Engine engenieZ =  Engine(26,53,27); // Inizialice StepByStep Engine (Engine pin enable(one step),limit swich pin,Engine pin rotation direction)
 
-  //Threads to move Servos
+  //Threads to move stepBysteps
   Thread moveThreadX = Thread();
   Thread moveThreadY = Thread();
   Thread moveThreadZ = Thread();
@@ -37,24 +37,24 @@
 
   //Move to left one by one until 512
   void moveLeftX(){
-    engenieX.moveServoStepLeft(1);    
+    engenieX.movestepBystepStepLeft(1);    
   }
   void moveLeftY(){
-    engenieX.moveServoStepLeft(1);    
+    engenieX.movestepBystepStepLeft(1);    
   }
   void moveLeftZ(){
-    engenieX.moveServoStepLeft(1);    
+    engenieX.movestepBystepStepLeft(1);    
   }
   
   //Move to Rigth one by one until 512
   void moveRigthX(){
-    engenieX.moveServoStepLeft(1);    
+    engenieX.movestepBystepStepLeft(1);    
   }
   void moveRigthY(){
-    engenieX.moveServoStepLeft(1);    
+    engenieX.movestepBystepStepLeft(1);    
   }
   void moveRigthZ(){
-    engenieX.moveServoStepLeft(1);    
+    engenieX.movestepBystepStepLeft(1);    
   }
 
 
@@ -66,11 +66,10 @@ void setup() {
   LCDScreen.init(lcd);
   LCDScreen.Options(lcd,0);
   
-  while(true){
-    
-    while(true){ 
+  while(true) {    
+    while(true) { 
       int sensorValue = analogRead(A0);
-      sensorValue = sensorValue * 5 * 1023;
+      sensorValue = sensorValue * 5 / 1023;
       //Calibrate Axis
       if(sensorValue < 1){selected == 0;LCDScreen.Options(lcd,selected);}
       //Calibrate Extrusor
@@ -82,7 +81,7 @@ void setup() {
       //about
       if(sensorValue > 4){selected == 4;LCDScreen.Options(lcd,selected);}      
       if(analogRead(A1) > 1){
-          break;        
+          break;// exit from while(true)  
         }  
     switch(sensorValue){
        case 0  :  calibrateAxisToZero(engenieX,engenieY,engenieZ) ;
@@ -90,8 +89,11 @@ void setup() {
        case 1  :  calibrateAxisToZero(engenieX,engenieY,engenieZ); 
                   break; //optional  
        case 2  :  for(int i = 0;i < 256;i++){
+                    //Create a thread which moves the Engine(Simulation thread)
                     moveThreadX.onRun(moveLeftX);
+                    //Create a thread which moves the Engine(Simulation thread)
                     moveThreadY.onRun(moveLeftY);
+                    //Create a thread which moves the Engine(Simulation thread)
                     moveThreadZ.onRun(moveLeftZ);   
                   } 
                   break; //optional
@@ -100,8 +102,7 @@ void setup() {
        case 4  :  calibrateAxisToZero(engenieX,engenieY,engenieZ);
                   break; //optional          
       }
-    }
-   
+    }   
   }
 }
 void loop() {
