@@ -16,7 +16,7 @@
 
   //Start display 12->write enable others control the display.
   LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
-  
+  Interface LCDScreen;
   //Start the code
   Engine engenieX =  Engine(22,49,23); // Inizialice StepByStep Engine (Engine pin enable(one step),limit swich pin,Engine pin rotation direction)
   Engine engenieY =  Engine(24,51,25); // Inizialice StepByStep Engine (Engine pin enable(one step),limit swich pin,Engine pin rotation direction)
@@ -61,12 +61,14 @@
 void setup() {  
   lcd.begin(16,2);
   //Inizialice Interface
-  Interface LCDScreen;  
   
   LCDScreen.init(lcd);
-  LCDScreen.Options(lcd,0);
+  LCDScreen.Options(lcd,0);  
+ 
+}
+void loop() {
   
-  while(true) {    
+   while(true) {    
     while(true) { 
       int sensorValue = analogRead(A0);
       sensorValue = sensorValue * 5 / 1023;
@@ -104,7 +106,4 @@ void setup() {
       }
     }   
   }
-}
-void loop() {
-  // no need to repeat the melody.
 }
