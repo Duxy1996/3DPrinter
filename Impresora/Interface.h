@@ -15,24 +15,30 @@ class Interface {
  
   void Options(LiquidCrystal lcd,int index){   
     switch(index){
-       case 0  :  lcd.setCursor(0,0);
+       case 0  :  lcd.clear();
                   lcd.print(">CalibrateAxis");
-                  lcd.setCursor(0,1);
+                  lcd.setCursor(0,2);
                   lcd.print(" CalibrateExtrusor");
                   break; //optional
-       case 1  :  lcd.setCursor(0,0);
+       case 1  :  lcd.clear();
                   lcd.print(" CalibrateAxis");
-                  lcd.setCursor(0,1);
+                  lcd.setCursor(0,2);
                   lcd.print(">CalibrateExtrusor");
                   break; //optional  
-       case 2  :  lcd.setCursor(0,0);
-                  lcd.print("CalibrateExtrusor");
-                  lcd.setCursor(0,1);
+       case 2  :  lcd.clear();
                   lcd.print(">loadFromSD");
+                  lcd.setCursor(0,2);
+                  lcd.print(" More options");
                   break; //optional
-       case 3  :  
+       case 3  :  lcd.clear();
+                  lcd.print(" loadFromSD");
+                  lcd.setCursor(0,2);
+                  lcd.print(">More options");
                   break; //optional
-       case 4  :  
+       case 4  :  lcd.clear();
+                  lcd.print(">About");
+                  lcd.setCursor(0,2);
+                  lcd.print("");
                   break; //optional          
       }     
     

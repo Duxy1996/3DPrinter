@@ -10,12 +10,22 @@
 #define sizeY 512
 #define sizeZ 512
 
+#define LCDRS 12
+#define LCDE 11
+#define LCDPINONE 5
+#define LCDPINTWO 4
+#define LCDPINTHREE 3
+#define LCDPINFOUR 2
+#define PINANA A0
+#define PINANAONE A1
+
 //Vars
 
   int selected;
-
+  int sensorValue;
+  
   //Start display 12->write enable others control the display.
-  LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+  LiquidCrystal lcd(LCDRS, LCDE, LCDPINONE, LCDPINTWO, LCDPINTHREE, LCDPINFOUR);
   Interface LCDScreen;
   //Start the code
   Engine engenieX =  Engine(22,49,23); // Inizialice StepByStep Engine (Engine pin enable(one step),limit swich pin,Engine pin rotation direction)
@@ -64,24 +74,21 @@ void setup() {
   
   LCDScreen.init(lcd);
   LCDScreen.Options(lcd,0);  
+  sensorValue = 0;
  
 }
 void loop() {
   
    while(true) {    
     while(true) { 
-      int sensorValue = analogRead(A0);
-      sensorValue = sensorValue * 5 / 1023;
-      //Calibrate Axis
-      if(sensorValue < 1){selected == 0;LCDScreen.Options(lcd,selected);}
-      //Calibrate Extrusor
-      if(sensorValue < 2 && sensorValue > 1){selected == 1;LCDScreen.Options(lcd,selected);}
-      //Load From sd
-      if(sensorValue < 3 && sensorValue > 2){selected == 2;LCDScreen.Options(lcd,selected);}
-      //More
-      if(sensorValue < 4 && sensorValue > 3){selected == 3;LCDScreen.Options(lcd,selected);}
-      //about
-      if(sensorValue > 4){selected == 4;LCDScreen.Options(lcd,selected);}      
+      int ant = sensorValue;
+      sensorValue = analogRead(A0);
+      sensorValue = sensorValue * 5 / 1010; 
+      if(ant != sensorValue){     
+        LCDScreen.Options(lcd,sensorValue);  
+        delay(100);
+      }      
+      
       if(analogRead(A1) > 1){
           break;// exit from while(true)  
         }  
